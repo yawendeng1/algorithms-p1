@@ -1,5 +1,3 @@
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
@@ -11,6 +9,7 @@ public class Percolation{
     private int gridSize;
     private int virtualTop;
     private int virtualBottom;
+    private int countOpen;
     
     
     // create n-by-n grid, with all sites blocked
@@ -23,6 +22,7 @@ public class Percolation{
         wquf = new WeightedQuickUnionUF(gridSize*gridSize+2);
         virtualTop = 0;
         virtualBottom = gridSize*gridSize+1;
+        countOpen = 0;
     }
     
     private int getUnionFindIndex(int row,int col){
@@ -50,6 +50,7 @@ public class Percolation{
     public void open(int row, int col){
         validateIndices(row,col);
         if (!isOpen(row, col)){
+            countOpen++;
             grid[row-1][col-1] = true;
             int index = getUnionFindIndex(row, col);
             if (row == 1){
@@ -82,7 +83,7 @@ public class Percolation{
    
     // number of open sites
     public int numberOfOpenSites(){
-        return wquf.count();      
+        return countOpen;     
     }
     
     // does the system percolate?
