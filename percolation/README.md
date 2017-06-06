@@ -6,7 +6,7 @@ source: https://www.sigmainfy.com/blog/avoid-backwash-in-percolation.html
 use virtual top and virtual bottom.
 
 ## Method 2
-use two different Weighted Quick Union Union Find objects.
+use two different Weighted Quick Union Union Find objects.The only difference between them is that one has only top virtual site (let’s call it uf_A), the other is the normal object with two virtual sites top one and the bottom one (let’s call it uf_B) suggested in the course, uf_A has no backwash problem because we “block” the bottom virtual site by removing it. uf_B is for the purpose to efficiently determine if the system percolates or not as described in the course. So every time we open a site (i, j) by calling Open(i, j), within this method, we need to do  union() twice: uf_A.union() and uf_B.union(). Obviously the bad point of the method is that: semantically we are saving twice the same information which doesn’t seem like a good pattern indeed. The good aspect might be it is the most straightforward and natural approach for people to think of.
 
 ## Method 3
 In the original Bob’s notes, it says we have to modify the API to achieve this, but actually it does not have to be like that. We create ONE WQUUF object of size N * N, and allocate a separate array of size N * N to keep the status of each site: blocked, open, connect to top, connect to bottom. I use bit operation for the status so for each site, it could have combined status like Open and connect to top.
