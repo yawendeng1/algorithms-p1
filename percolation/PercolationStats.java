@@ -42,8 +42,7 @@ public class PercolationStats{
     
     // low endpoint of 95% confidence interval
     public double confidenceLo(){
-        return mean() - 1.96 * stddev() / Math.sqrt(numOfTrails);
-        
+        return mean() - 1.96 * stddev() / Math.sqrt(numOfTrails);    
     }
     
     // high endpoint of 95% confidence interval
@@ -62,6 +61,4 @@ public class PercolationStats{
         StdOut.println("95% confidence interval\t= " + ps.confidenceLo() + ", " + ps.confidenceHi());
         StdOut.println("Time elapsed\t\t\t= " + timer.elapsedTime());
     }
-
-
 }
