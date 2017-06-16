@@ -63,7 +63,7 @@ public class Point implements Comparable<Point> {
         if (compareTo(that) == 0) return Double.NEGATIVE_INFINITY;
         if (this.y == that.y) return 0;
         if (this.x == that.x) return Double.POSITIVE_INFINITY;
-        double slope = (double)(that.y - this.y) / (double)(that.x - this.x);
+        double slope = (double)(that.y - this.y) / (that.x - this.x);
         return slope;
     }
 
@@ -95,10 +95,10 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-        return new Comparator<Point>(){
+        return new Comparator<Point>() {
             @Override
             public int compare(Point p1, Point p2) {
-                Double slopeDiff =  slopeTo(p1) - slopeTo(p2);
+                double slopeDiff =  slopeTo(p1) - slopeTo(p2);
                 if (slopeDiff > 0) return 1;
                 else if (slopeDiff == 0) return 0;
                 else return -1;
