@@ -18,12 +18,12 @@ The problem. In a famous scientific problem, researchers are interested in the f
         
 When n is sufficiently large, there is a threshold value p* such that when p < p* a random n-by-n grid almost never percolates, and when p > p*, a random n-by-n grid almost always percolates. No mathematical solution for determining the percolation threshold p* has yet been derived. Your task is to write a computer program to estimate p*.
 
-## Week 2 Deques and Randomized Queues
+## Week 2: Deques and Randomized Queues
 http://coursera.cs.princeton.edu/algs4/assignments/queues.html
 
 Write a generic data type for a deque and a randomized queue. The goal of this assignment is to implement elementary data structures using arrays and linked lists, and to introduce you to generics and iterators.
 
-## Week 3 Collinear Points
+## Week 3: Collinear Points
 http://coursera.cs.princeton.edu/algs4/assignments/collinear.html
 
 Computer vision involves analyzing patterns in visual images and reconstructing the real-world objects that produced them. The process is often broken up into two phases: feature detection and pattern recognition. Feature detection involves selecting important features of the image; pattern recognition involves discovering patterns in the features. We will investigate a particularly clean pattern recognition problem involving points and line segments. This kind of pattern recognition arises in many other applications such as statistical data analysis.
@@ -34,7 +34,7 @@ The problem. Given a set of n distinct points in the plane, find every (maximal)
         <img width = 600 src = "http://coursera.cs.princeton.edu/algs4/assignments/lines2.png">
 </div>
 
-## Week 4 8 Puzzle
+## Week 4: 8 Puzzle
 http://coursera.cs.princeton.edu/algs4/assignments/8puzzle.html
 
 The 8-puzzle problem is a puzzle invented and popularized by Noyes Palmer Chapman in the 1870s. It is played on a 3-by-3 grid with 8 square blocks labeled 1 through 8 and a blank square. Your goal is to rearrange the blocks so that they are in order, using as few moves as possible. You are permitted to slide blocks horizontally or vertically into the blank square. The following shows a sequence of legal moves from an initial board (left) to the goal board (right).
