@@ -83,6 +83,7 @@ public class Solver {
     }
     
     // sequence of boards in a shortest solution; null if unsolvable
+    // to make the first initial, use to stack
     public Iterable<Board> solution() {
         if (!isSolvable()) return null;
         Stack<Board> solutions = new Stack<Board>();
