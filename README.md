@@ -58,3 +58,18 @@ For example, the Hamming and Manhattan priorities of the initial search node bel
 
          initial          goal         Hamming = 5 + 0          Manhattan = 10 + 0
 We make a key observation: To solve the puzzle from a given search node on the priority queue, the total number of moves we need to make (including those already made) is at least its priority, using either the Hamming or Manhattan priority function. (For Hamming priority, this is true because each block that is out of place must move at least once to reach its goal position. For Manhattan priority, this is true because each block must move its Manhattan distance from its goal position. Note that we do not count the blank square when computing the Hamming or Manhattan priorities.) Consequently, when the goal board is dequeued, we have discovered not only a sequence of moves from the initial board to the goal board, but one that makes the fewest number of moves. (Challenge for the mathematically inclined: prove this fact.)
+
+## Week 5: Kd-Trees
+http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html
+
+Write a data type to represent a set of points in the unit square (all points have x- and y-coordinates between 0 and 1) using a 2d-tree to support efficient range search (find all of the points contained in a query rectangle) and nearest neighbor search (find a closest point to a query point). 2d-trees have numerous applications, ranging from classifying astronomical objects to computer animation to speeding up neural networks to mining data to image retrieval.
+
+<div style="width:800px; margin:0 auto;">
+        <img width = 600 src = "http://coursera.cs.princeton.edu/algs4/assignments/kdtree-ops.png">
+</div>
+
+Geometric primitives. To get started, use the following geometric primitives for points and axis-aligned rectangles in the plane.
+
+<div style="width:800px; margin:0 auto;">
+        <img width = 600 src = "http://coursera.cs.princeton.edu/algs4/assignments/RectHV.png">
+</div>
