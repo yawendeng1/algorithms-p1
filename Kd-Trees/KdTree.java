@@ -57,20 +57,22 @@ public class KdTree {
             while (cur != null) {
                 prev = cur;
                 if (cur.distanceTo(p) < 0) cur = cur.left;
-                else if (cur.distanceTo(p) == 0) return;
+                else if (cur.point.distanceTo(p) == 0) return;
                 else cur = cur.right;
             }
-            if (cur.distanceTo(p) < 0) prev.left = added;
-            else prev.right = added;           
+            if (prev.distanceTo(p) < 0) prev.left = added;
+            else prev.right = added; 
+            added.depth = prev.depth + 1;
         }
+         size++;
     }
     
     // does the set contain point p? 
     public boolean contains (Point2D p) {
-        if (root == null) return false;
+        if (root == null || size == 0) return false;
         KdNode cur = root;
         while (cur != null) {
-            if (cur.distanceTo(p) == 0) return true;
+            if (cur.point.distanceTo(p) == 0) return true;
             if (cur.distanceTo(p) < 0) cur = cur.left;
             else cur = cur.right;       
         }
@@ -100,32 +102,40 @@ public class KdTree {
         if (cur == null) return;
         if (rect.contains(cur.point)) {
             stack.push(cur.point);
-            rangeRecursive(rect, stack, cur.left);
-            rangeRecursive(rect, stack, cur.right);
-        } else {
-            if (rect.distanceTo(cur.point) < 0) rangeRecursive(rect, stack, cur.left);
-            else rangeRecursive(rect, stack, cur.right);       
         }
+        double pointCoord = cur.point.y();
+        double rectMin = rect.ymin();
+        double rectMax = rect.ymax();
+        if (cur.depth % 2 != 0) {
+            pointCoord = cur.point.x();
+            rectMin = rect.xmin();
+            rectMax = rect.xmax();
+        }
+        
+        if (rectMin < pointCoord) rangeRecursive(rect, stack, cur.left);
+        if (rectMax >= pointCoord) rangeRecursive(rect, stack, cur.right);
     }
     
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         double nearestDis = Double.POSITIVE_INFINITY;
-        KdNode nearestNode = null;
-        nearestRecursive(nearestDis, nearestNode, root, p);
-        return nearestNode.point;
+        Point2D nearestPoint = null;
+        nearestPoint = nearestRecursive(nearestDis, nearestPoint, root, p);
+        return nearestPoint;
     }
     
-    private void nearestRecursive(Double nearestDis, KdNode nearestNode, KdNode cur, Point2D p) {
-        if (cur == null) return;
-        double distance = cur.point.distanceSquaredTo(p);
+    
+    // void function doesn't work
+    private Point2D nearestRecursive(double nearestDis, Point2D nearestPoint, KdNode cur, Point2D p) {
+        if (cur == null) return nearestPoint;
+        double distance = cur.point.distanceTo(p);
         if (distance < nearestDis) {
-            if (distance == 0) return;
             nearestDis = distance;
-            nearestNode = cur;         
-            if (cur.distanceTo(p) < 0) nearestRecursive(nearestDis, nearestNode, cur.left, p);
-            else nearestRecursive(nearestDis, nearestNode, cur.right, p);
+            nearestPoint = cur.point;
         }
+        if (cur.distanceTo(p) < 0) nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.left, p);
+        else nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.right, p);
+        return nearestPoint;
     }
 
     // unit testing of the methods (optional) 
