@@ -6,7 +6,8 @@ import edu.princeton.cs.algs4.RectHV;
 
 public class PointSET {
     
-    private TreeSet<Point2D> pointSet;
+    // The private instance (or static) variable 'pointSet' can be made 'final'; it is initialized only in the declaration or constructor. [ImmutableField]
+    private final TreeSet<Point2D> pointSet;
 
     // construct an empty set of points
     public PointSET() {
@@ -24,12 +25,12 @@ public class PointSET {
     }
     
     // add the point to the set (if it is not already in the set)
-    public void insert (Point2D p) {
+    public void insert(Point2D p) {
         pointSet.add(p);
     }
     
     // does the set contain point p? 
-    public boolean contains (Point2D p) {
+    public boolean contains(Point2D p) {
         return pointSet.contains(p);
     }
     
@@ -41,7 +42,7 @@ public class PointSET {
     }
     
     // all points that are inside the rectangle
-    public Iterable<Point2D> range (RectHV rect) {
+    public Iterable<Point2D> range(RectHV rect) {
         Stack<Point2D> stack = new Stack<>();
         for (Point2D p : pointSet) {
             if (rect.contains(p))
@@ -53,7 +54,7 @@ public class PointSET {
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         if (pointSet.isEmpty()) return null;
-        Double minDis = Double.MAX_VALUE;
+        double minDis = Double.MAX_VALUE;
         Point2D minPoint = null;
         for (Point2D point : pointSet) {
             if (p.distanceTo(point) < minDis) {
@@ -62,9 +63,5 @@ public class PointSET {
             }
         }
         return minPoint;
-    }
-
-    // unit testing of the methods (optional) 
-    public static void main(String[] args) {}
-    
+    }   
 }

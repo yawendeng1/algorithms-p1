@@ -1,4 +1,3 @@
-import java.util.TreeSet;
 import java.util.Stack;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
@@ -6,15 +5,15 @@ import edu.princeton.cs.algs4.RectHV;
 
 public class KdTree {
     
-    KdNode root;
-    int size;
+    private KdNode root;
+    private int size;
     
     private class KdNode {
     
-        Point2D point;
-        int depth;
-        KdNode left;
-        KdNode right;
+        private Point2D point;
+        private int depth;
+        private KdNode left;
+        private KdNode right;
         
         public KdNode(Point2D point) {
             this.point = point;
@@ -46,7 +45,7 @@ public class KdTree {
     }
     
     // add the point to the set (if it is not already in the set)
-    public void insert (Point2D p) {
+    public void insert(Point2D p) {
         KdNode added = new KdNode(p);
         if (root == null) {
             root = added;
@@ -85,16 +84,16 @@ public class KdTree {
         drawNode(root);     
     }
     
-    private void drawNode(KdNode root) {
-        root.point.draw();
-        if (root.left != null) drawNode(root.left);
-        if (root.right != null) drawNode(root.right);
+    private void drawNode(KdNode node) {
+        node.point.draw();
+        if (node.left != null) drawNode(node.left);
+        if (node.right != null) drawNode(node.right);
     }
     
     // all points that are inside the rectangle
-    public Iterable<Point2D> range (RectHV rect) {
+    public Iterable<Point2D> range(RectHV rect) {
         Stack<Point2D> stack = new Stack<>();
-        rangeRecursive(rect,stack,root);
+        rangeRecursive(rect, stack, root);
         return stack;
     }
     
@@ -119,8 +118,7 @@ public class KdTree {
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         double nearestDis = Double.POSITIVE_INFINITY;
-        Point2D nearestPoint = null;
-        nearestPoint = nearestRecursive(nearestDis, nearestPoint, root, p);
+        Point2D nearestPoint = nearestRecursive(nearestDis, nearestPoint, root, p);
         return nearestPoint;
     }
     
@@ -136,9 +134,5 @@ public class KdTree {
         if (cur.distanceTo(p) < 0) nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.left, p);
         else nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.right, p);
         return nearestPoint;
-    }
-
-    // unit testing of the methods (optional) 
-    public static void main(String[] args) {}
-    
+    }    
 }
