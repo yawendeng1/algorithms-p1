@@ -57,8 +57,8 @@ public class PointSET {
         double minDis = Double.MAX_VALUE;
         Point2D minPoint = null;
         for (Point2D point : pointSet) {
-            if (p.distanceTo(point) < minDis) {
-                minDis = p.distanceTo(point);
+            if (p.distanceSquaredTo(point) < minDis) {
+                minDis = p.distanceSquaredTo(point);
                 minPoint = point;
             }
         }

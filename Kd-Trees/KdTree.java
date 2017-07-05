@@ -56,7 +56,7 @@ public class KdTree {
             while (cur != null) {
                 prev = cur;
                 if (cur.distanceTo(p) < 0) cur = cur.left;
-                else if (cur.point.distanceTo(p) == 0) return;
+                else if (cur.point.distanceSquaredTo(p) == 0) return;
                 else cur = cur.right;
             }
             if (prev.distanceTo(p) < 0) prev.left = added;
@@ -71,7 +71,7 @@ public class KdTree {
         if (root == null || size == 0) return false;
         KdNode cur = root;
         while (cur != null) {
-            if (cur.point.distanceTo(p) == 0) return true;
+            if (cur.point.distanceSquaredTo(p) == 0) return true;
             if (cur.distanceTo(p) < 0) cur = cur.left;
             else cur = cur.right;       
         }
@@ -118,21 +118,37 @@ public class KdTree {
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         double nearestDis = Double.POSITIVE_INFINITY;
-        Point2D nearestPoint = nearestRecursive(nearestDis, nearestPoint, root, p);
-        return nearestPoint;
+        if (root == null) return null;
+        return nearestRecursive(nearestDis, null, root, p);
     }
     
     
     // void function doesn't work
     private Point2D nearestRecursive(double nearestDis, Point2D nearestPoint, KdNode cur, Point2D p) {
-        if (cur == null) return nearestPoint;
-        double distance = cur.point.distanceTo(p);
+        double distance = cur.point.distanceSquaredTo(p);
         if (distance < nearestDis) {
             nearestDis = distance;
             nearestPoint = cur.point;
         }
-        if (cur.distanceTo(p) < 0) nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.left, p);
-        else nearestPoint = nearestRecursive(nearestDis, nearestPoint, cur.right, p);
+        Point2D point1 = null;
+        Point2D point2 = null;
+        if (cur.distanceTo(p) <= 0 && cur.left != null ) {
+            point1 = nearestRecursive(nearestDis, nearestPoint, cur.left, p);
+            if (cur.left.point.distanceSquaredTo(p) > nearestDis && cur.right != null) {
+                point2 = nearestRecursive(nearestDis, nearestPoint, cur.right, p);
+            }           
+        }
+        else if (cur.distanceTo(p) >= 0 && cur.right != null ) {
+            point1 = nearestRecursive(nearestDis, nearestPoint, cur.right, p);
+            if (cur.right.point.distanceSquaredTo(p) > nearestDis && cur.left != null) {
+                point2 = nearestRecursive(nearestDis, nearestPoint, cur.left, p);
+            }
+        }
+        
+        if (point1 != null) {
+            if (point2 == null || point2.distanceSquaredTo(p) > point1.distanceSquaredTo(p)) nearestPoint = point1;
+            else nearestPoint = point2;     
+        }
         return nearestPoint;
     }    
 }
