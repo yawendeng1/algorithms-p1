@@ -1,6 +1,7 @@
 import java.util.Stack;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 
 public class KdTree {
@@ -21,15 +22,15 @@ public class KdTree {
             this.rect = rect;
         }
         
-        public boolean isVertical(Point2D that) {
+        public boolean isVertical() {
             return depth % 2 == 0;
         }  
         
         public double distanceTo(Point2D that) {
             if (depth % 2 == 0) {
-                return that.y() - this.point.y();
-            } else {
                 return that.x() - this.point.x();
+            } else {
+                return that.y() - this.point.y();
             }
         }
     }
@@ -61,12 +62,12 @@ public class KdTree {
             KdNode prev = root;
             while (cur != null) {
                 prev = cur;
+                if (cur.point.equals(p)) return;
                 if (cur.distanceTo(p) < 0) cur = cur.left;
-                else if (cur.point.equals(p)) return;
                 else cur = cur.right;
             }
 
-            if (!prev.isVertical(p)) {
+            if (prev.isVertical()) {
                 if (prev.distanceTo(p) < 0) {
                     prev.left = new KdNode(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.point.x(), prev.rect.ymax()));
                     prev.left.depth = prev.depth + 1;
@@ -101,14 +102,23 @@ public class KdTree {
     
     // draw all points to standard draw 
     public void draw() {
-        if (root == null) return;
         drawNode(root);     
     }
     
     private void drawNode(KdNode node) {
+        if (node == null) return;
         node.point.draw();
-        if (node.left != null) drawNode(node.left);
-        if (node.right != null) drawNode(node.right);
+        if (node.isVertical()) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(node.point.x(), node.rect.ymin(), node.point.x(), node.rect.ymax());
+//            StdDraw.line(node.rect.xmin(), node.point.y(), node.rect.xmax(), node.point.y());
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(node.rect.xmin(), node.point.y(), node.rect.xmax(), node.point.y());
+//            StdDraw.line(node.point.x(), node.rect.ymin(), node.point.x(), node.rect.ymax());
+        }
+        drawNode(node.left);
+        drawNode(node.right);
     }
     
     // all points that are inside the rectangle
@@ -126,7 +136,7 @@ public class KdTree {
         double pointCoord = cur.point.y();
         double rectMin = rect.ymin();
         double rectMax = rect.ymax();
-        if (cur.depth % 2 != 0) {
+        if (cur.isVertical()) {
             pointCoord = cur.point.x();
             rectMin = rect.xmin();
             rectMax = rect.xmax();
@@ -138,45 +148,44 @@ public class KdTree {
     
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
-        return nearestRecursive(Double.POSITIVE_INFINITY, root, p);
+        // if root is null, root.point doesn't exist
+        if (root == null || p == null) return null;
+        return nearestRecursive(root, root.point, p);
     }
     
     
     // void function doesn't work, java pass by value
-    private Point2D nearestRecursive(double nearestDis, KdNode cur, Point2D p) {
+    private Point2D nearestRecursive(KdNode cur, Point2D np, Point2D p) {
         if (cur == null) return null;
-        if (cur.rect.distanceTo(p) >= nearestDis) return null;
         double distance = cur.point.distanceSquaredTo(p);
-        Point2D nearestPoint = null;
+        Point2D nearestPoint = np;
         if (distance == 0) return cur.point;
-        if (distance < nearestDis) {
-            nearestDis = distance;
+        if (distance < nearestPoint.distanceSquaredTo(p)) {
             nearestPoint = cur.point;
         } 
         
-        KdNode node1 = cur.left;
-        KdNode node2 = cur.right;
-        if (node1 != null && node2 != null) {
-            if (node1.rect.distanceTo(p) > node2.rect.distanceTo(p)) {
-                node1 = cur.right;
-                node2 = cur.left;
+        if (cur.rect.distanceSquaredTo(p) < nearestPoint.distanceSquaredTo(p)) {
+            KdNode node1 = cur.left;
+            KdNode node2 = cur.right;
+            if (node1 != null && node2 != null) {
+                if (node1.rect.distanceTo(p) > node2.rect.distanceTo(p)) {
+                    node1 = cur.right;
+                    node2 = cur.left;
+                }
             }
-        }
         
-        Point2D point1 = nearestRecursive(nearestDis, node1, p);       
-        if (point1 != null) {
-            if (p.distanceSquaredTo(point1) < nearestDis) {
-                nearestPoint = point1;
-                nearestDis = p.distanceSquaredTo(point1);
-            }
-        }
-        
-        Point2D point2 = nearestRecursive(nearestDis, node2, p);
-        if (point2 != null) {
-            if (p.distanceSquaredTo(point2) < nearestDis) {
-                nearestPoint = point2;
-//                nearestDis = p.distanceSquaredTo(point2);
-            }
+           Point2D point1 = nearestRecursive(node1, nearestPoint, p);         
+           if (point1 != null) {
+               if (point1.distanceSquaredTo(p) < nearestPoint.distanceSquaredTo(p)) {
+                   nearestPoint = point1;
+               }
+           }
+           Point2D point2 = nearestRecursive(node2, nearestPoint, p);
+           if (point2 != null) {
+               if (point2.distanceSquaredTo(p) < nearestPoint.distanceSquaredTo(p)) {
+                   nearestPoint = point2;
+               }
+           }
         }
         return nearestPoint;
     }    
