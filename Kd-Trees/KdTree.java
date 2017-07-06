@@ -15,7 +15,7 @@ public class KdTree {
         private int depth;
         private KdNode left;
         private KdNode right;
-        private final RectHV rect;
+        private final RectHV rect; // outer rectangle
         
         public KdNode(Point2D point, RectHV rect) {
             this.point = point;
